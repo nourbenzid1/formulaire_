@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulaire avec reCAPTCHA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+  <h1>Formulaire sécurisé</h1>
+  <form id="contact-form">
+    <label>Nom :</label>
+    <input type="text" name="nom" required>
+
+    <label>Email :</label>
+    <input type="email" name="email" required>
+
+    <label>Message :</label>
+    <textarea name="message" required></textarea>
+
+    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <script>
+    document.querySelector("#contact-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      const data = new URLSearchParams(formData);
+
+      try {
+        const response = await fetch("/submit", {
+          method: "POST",
+          body: data,
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert(result.success);
+          form.reset();
+          grecaptcha.reset();
+        } else {
+          alert(result.error);
+        }
+      } catch (error) {
+        alert("Une erreur s'est produite. Veuillez réessayer.");
+      }
+    });
+  </script>
+</body>
+</html>

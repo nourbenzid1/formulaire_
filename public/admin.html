@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interface d'Administration</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+ 
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <h1>📋 Liste des messages reçus</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Message (haché)</th>
+      </tr>
+    </thead>
+    <tbody id="messagesBody"></tbody>
+  </table>
+
+  <script>
+    fetch('/admin/messages')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('messagesBody');
+        data.forEach(msg => {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${msg.nom}</td><td>${msg.email}</td><td>${msg.message}</td>`;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(err => {
+        console.error('Erreur lors du chargement des messages', err);
+      });
+  </script>
+</body>
+</html>
